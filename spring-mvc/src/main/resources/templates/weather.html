@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather here</title>
+    <meta http-equiv="Content-Type" content="text/html"; charset="UTF-8"/>
+</head>
+<body>
+<div class="weatherlist" th:unless="${#lists.isEmpty(currentWeather)}">
+    <h2>Weather here</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Lat</th>
+            <th>Lot</th>
+            <th>Time generation</th>
+            <th>Utc offset seconds</th>
+            <th>Time zone</th>
+            <th>Timezone abbreviation</th>
+            <th>Elevation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ac : ${currentWeather}">
+            <td th:text="${ac.latitude}"></td>
+            <td th:text="${ac.longitude}"></td>
+            <td th:text="${ac.generationtimeMs}"></td>
+            <td th:text="${ac.utcOffsetSeconds}"></td>
+            <td th:text="${ac.timezone}"></td>
+            <td th:text="${ac.timezoneAbbreviation}"></td>
+            <td th:text="${ac.elevation}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
