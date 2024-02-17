@@ -18,7 +18,7 @@ public class TacoOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date placedAt;
+    private Date placedAt = new Date();
 
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
@@ -36,6 +36,7 @@ public class TacoOrder {
             message = "Must be format MM/YY")
     private String ccExpiration;
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
+    @Column(name = "cc_cvv")
     private String ccCVV;
 
     @OneToMany(cascade = CascadeType.ALL)
