@@ -12,12 +12,12 @@ import java.util.Map;
 @Component
 public class IngredientByIdConvertor implements Converter<String, Ingredient> {
     private IngredientRepository ingredientRepository;
+    public IngredientByIdConvertor(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
+
     @Override
     public Ingredient convert(String id) {
         return ingredientRepository.findById(id).orElse(null);
-    }
-
-    public IngredientByIdConvertor(IngredientRepository ingredientRepository) {
-        this.ingredientRepository = ingredientRepository;
     }
 }

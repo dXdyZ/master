@@ -37,6 +37,6 @@ public class OrderController {
         orderRepository.save(order);
         sessionStatus.setComplete();
 
-        return "redirect:/";
+        return "redirect:/load";
     }
 }
