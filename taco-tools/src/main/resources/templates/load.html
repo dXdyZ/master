@@ -6,5 +6,11 @@
 </head>
 <body>
 <h1>Ождайте скоро доставят</h1>
+<div>
+    <form method="post" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+    </form>
+</div>
+<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 </body>
 </html>

@@ -1,8 +1,11 @@
 package org.another.tacotools.securityconfig;
 
+import org.another.tacotools.service.JpaUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -24,6 +27,13 @@ import java.util.List;
 @EnableWebSecurity
 public class ConfigTest {
 
+    private final JpaUserDetailsService userDetailsService;
+
+    @Autowired
+    public ConfigTest(JpaUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,23 +51,17 @@ public class ConfigTest {
                         .loginPage("/login")
                         .defaultSuccessUrl("/design")
                 )
-                .logout((logoun) -> logoun.permitAll());
+                .logout((logoun) -> logoun
+                        .permitAll()
+                        .logoutSuccessUrl("/login")
+                );
 
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userServiceInMemory(PasswordEncoder passwordEncoder) {
-        List<UserDetails> userList = new ArrayList<>();
-        userList.add(new User(
-                "admin", passwordEncoder.encode("password"),
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-        ));
-        userList.add(new User(
-                "user", passwordEncoder.encode("12345"),
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
-        ));
 
-        return new InMemoryUserDetailsManager(userList);
+
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }

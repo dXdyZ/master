@@ -4,10 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Taco Cloud</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #ffa500;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        form {
+            width: 300px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: calc(100% - 120px);
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #ffa500;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <h1>Register</h1>
-<img th:src="@{/images/TacoCloud.png}"/>
+<img th:src="@{/images/TacoCloudRegister.png}"/>
 <form method="POST" th:action="@{/register}" id="registerForm">
 
     <label for="username">Username: </label>
@@ -38,6 +88,8 @@
     <input type="text" name="phone"><br/>
 
     <input type="submit" value="Register"/>
+
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 </form>
 </body>
 </html>
