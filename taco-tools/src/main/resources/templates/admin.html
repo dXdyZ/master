@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Taco Admin</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #005680;
+        }
+    </style>
+</head>
+<body>
+<h1>Страница администрирования</h1>
+<form th:action="@{/admin/deleteOrders}" method="post">
+  <button type="submit">Удалить все заказы</button>
+</form>
+
+<form th:action="@{/admin/deleteUsers}" method="post">
+  <button type="submit">Удалить всех пользователей</button>
+</form>
+
+<form th:action="@{/admin/deleteUserById}" method="post">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="id" required>
+    <button type="submit">Удалить пользователя</button>
+</form>
+
+<form th:action="@{/admin/deleteAllTaco}" method="post">
+    <button type="submit">Удалить все тако</button>
+</form>
+
+<h1>All Users</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Fullname</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>State</th>
+        <th>ZIP</th>
+        <th>Phone Number</th>
+    </tr>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.password}"></td>
+        <td th:text="${user.fullname}"></td>
+        <td th:text="${user.street}"></td>
+        <td th:text="${user.city}"></td>
+        <td th:text="${user.state}"></td>
+        <td th:text="${user.zip}"></td>
+        <td th:text="${user.phoneNumber}"></td>
+    </tr>
+</table>
+
+<h1>All Taco</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Date creation</th>
+        <th>Name</th>
+        <th>Ingredients</th>
+    </tr>
+    <tr th:each="taco : ${allTacos}">
+        <td th:text="${taco.id}"></td>
+        <td th:text="${taco.createdAt}"></td>
+        <td th:text="${taco.name}"></td>
+        <td th:text="${taco.ingredients}"></td>
+    </tr>
+</table>
+
+<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+</body>
+</html>
