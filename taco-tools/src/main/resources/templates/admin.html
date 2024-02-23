@@ -14,10 +14,18 @@
 
         h1 {
             color: #333;
+            text-align: center;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         form {
-            margin-bottom: 20px;
+            text-align: center;
         }
 
         table {
@@ -49,10 +57,41 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
             background-color: #005680;
+            transform: scale(1.05);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -64,12 +103,6 @@
 
 <form th:action="@{/admin/deleteUsers}" method="post">
   <button type="submit">Удалить всех пользователей</button>
-</form>
-
-<form th:action="@{/admin/deleteUserById}" method="post">
-    <label for="userId">User ID:</label>
-    <input type="text" id="userId" name="id" required>
-    <button type="submit">Удалить пользователя</button>
 </form>
 
 <form th:action="@{/admin/deleteAllTaco}" method="post">
@@ -101,6 +134,11 @@
         <td th:text="${user.phoneNumber}"></td>
     </tr>
 </table>
+<form th:action="@{/admin/deleteUserById}" method="post">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="id" required>
+    <button type="submit">Удалить пользователя</button>
+</form>
 
 <h1>All Taco</h1>
 <table border="1">
@@ -118,6 +156,46 @@
     </tr>
 </table>
 
+<form th:action="@{/admin/deleteTacoById}" method="post">
+    <label for="tacoId">Taco ID:</label>
+    <input type="text" id="tacoId" name="id" required>
+    <button type="submit">Удалить тако</button>
+</form>
+
+<h1>All Taco Order</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Placed At</th>
+        <th>User ID</th>
+        <th>CC CVV</th>
+        <th>CC Expiration</th>
+        <th>CC Number</th>
+        <th>Delivery City</th>
+        <th>Delivery Name</th>
+        <th>Delivery State</th>
+        <th>Delivery Street</th>
+        <th>Delivery Zip</th>
+    </tr>
+    <tr th:each="tacoOrder : ${allTacoOrder}">
+        <td th:text="${tacoOrder.id}"></td>
+        <td th:text="${tacoOrder.placedAt}"></td>
+        <td th:text="${tacoOrder.user}"></td>
+        <td th:text="${tacoOrder.ccCVV}"></td>
+        <td th:text="${tacoOrder.ccExpiration}"></td>
+        <td th:text="${tacoOrder.ccNumber}"></td>
+        <td th:text="${tacoOrder.deliveryCity}"></td>
+        <td th:text="${tacoOrder.deliveryName}"></td>
+        <td th:text="${tacoOrder.deliveryState}"></td>
+        <td th:text="${tacoOrder.deliveryStreet}"></td>
+        <td th:text="${tacoOrder.deliveryZip}"></td>
+    </tr>
+</table>
+<form th:action="@{/admin/deleteTacoOrderById}" method="post">
+    <label for="tacoOrderId">Taco ID:</label>
+    <input type="text" id="tacoOrderId" name="id" required>
+    <button type="submit">Удалить тако</button>
+</form>
 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 </body>
 </html>

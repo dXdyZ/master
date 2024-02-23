@@ -1,6 +1,7 @@
 package org.another.tacotools.service;
 
 import org.another.tacotools.model.Taco;
+import org.another.tacotools.model.TacoOrder;
 import org.another.tacotools.model.User;
 import org.another.tacotools.repository.OrderRepository;
 import org.another.tacotools.repository.TacoRepository;
@@ -63,5 +64,17 @@ public class OrderAdminService {
     @Transactional
     public void deleteTaco(Long id) {
         tacoRepository.deleteById(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteTacoOrder(Long id) {
+        orderRepository.deleteById(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public Iterable<TacoOrder> findAllTacoOrder() {
+        Iterable<TacoOrder> tacoOrders = orderRepository.findAll();
+        return tacoOrders;
     }
 }

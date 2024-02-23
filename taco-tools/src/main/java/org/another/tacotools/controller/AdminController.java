@@ -2,6 +2,7 @@ package org.another.tacotools.controller;
 
 import jakarta.validation.Valid;
 import org.another.tacotools.model.Taco;
+import org.another.tacotools.model.TacoOrder;
 import org.another.tacotools.model.User;
 import org.another.tacotools.repository.UserRepository;
 import org.another.tacotools.service.OrderAdminService;
@@ -61,10 +62,26 @@ public class AdminController {
         return adminService.findAllTaco();
     }
 
+    @ModelAttribute(name = "allTacoOrder")
+    public Iterable<TacoOrder> findAllTacoOrder(Model model) {
+        return adminService.findAllTacoOrder();
+    }
+
     @PostMapping("/deleteUserById")
     public String deleteByUserID(@RequestParam("id") Long id) {
         adminService.deleteUserById(id);
         return "redirect:/admin";
     }
 
+    @PostMapping("/deleteTacoById")
+    public String deleteTacoById(@RequestParam("id") Long id) {
+        adminService.deleteTaco(id);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/deleteTacoOrderById")
+    public String deleteTacoOrderById(@RequestParam("id") Long id) {
+        adminService.deleteTacoOrder(id);
+        return "redirect:/admin";
+    }
 }
