@@ -6,6 +6,7 @@ import org.another.tacotools.model.TacoOrder;
 import org.another.tacotools.model.User;
 import org.another.tacotools.repository.OrderRepository;
 import org.another.tacotools.repository.UserRepository;
+import org.another.tacotools.service.JmsOrderMessagingService;
 import org.another.tacotools.сonfigurationproperies.OrderProps;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.PageRequest;
@@ -31,13 +32,16 @@ public class OrderController {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private OrderProps orderProps;
+    private JmsOrderMessagingService messagingService;
 
     public OrderController(OrderRepository orderRepository,
                            UserRepository userRepository,
-                           OrderProps orderProps) {
+                           OrderProps orderProps,
+                           JmsOrderMessagingService messagingService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.orderProps = orderProps;
+        this.messagingService = messagingService;
     }
 
     @GetMapping("/current")
@@ -53,7 +57,6 @@ public class OrderController {
         if (errors.hasErrors()) return "orderForm";
 
         order.setUser(user);
-
         orderRepository.save(order);
         sessionStatus.setComplete();
 

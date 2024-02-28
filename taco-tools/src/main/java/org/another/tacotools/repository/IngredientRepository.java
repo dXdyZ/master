@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface IngredientRepository extends CrudRepository<Ingredient, String> {
+    void deleteIngredientById(String ingredientId);
 }
