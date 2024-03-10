@@ -6,12 +6,9 @@ import org.another.tacotools.model.TacoOrder;
 import org.another.tacotools.model.User;
 import org.another.tacotools.repository.OrderRepository;
 import org.another.tacotools.repository.UserRepository;
-import org.another.tacotools.service.JmsOrderMessagingService;
 import org.another.tacotools.сonfigurationproperies.OrderProps;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.security.Principal;
-
 @Slf4j
 @Controller
 @RequestMapping("/orders")
@@ -32,16 +27,13 @@ public class OrderController {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private OrderProps orderProps;
-    private JmsOrderMessagingService messagingService;
 
     public OrderController(OrderRepository orderRepository,
                            UserRepository userRepository,
-                           OrderProps orderProps,
-                           JmsOrderMessagingService messagingService) {
+                           OrderProps orderProps) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.orderProps = orderProps;
-        this.messagingService = messagingService;
     }
 
     @GetMapping("/current")

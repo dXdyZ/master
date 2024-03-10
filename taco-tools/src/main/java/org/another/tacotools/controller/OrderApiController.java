@@ -1,14 +1,10 @@
 package org.another.tacotools.controller;
 
-import org.another.tacotools.model.Taco;
 import org.another.tacotools.model.TacoOrder;
 import org.another.tacotools.repository.OrderRepository;
-import org.another.tacotools.service.JmsOrderMessagingService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/orders", produces = "application/json")
@@ -16,17 +12,14 @@ import java.util.Optional;
 public class OrderApiController {
 
     private OrderRepository repo;
-    private JmsOrderMessagingService messagingService;
 
-    public OrderApiController(OrderRepository repo, JmsOrderMessagingService messagingService) {
+    public OrderApiController(OrderRepository repo) {
         this.repo = repo;
-        this.messagingService = messagingService;
     }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public TacoOrder postOrder(@RequestBody TacoOrder order) {
-        messagingService.sendOrder(order);
         return repo.save(order);
     }
 

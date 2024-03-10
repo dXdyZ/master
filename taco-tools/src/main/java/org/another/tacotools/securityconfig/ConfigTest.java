@@ -48,7 +48,6 @@ public class ConfigTest {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/design", "/orders", "/orders/current", "/load").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/", "/**", "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/ingredients/").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
