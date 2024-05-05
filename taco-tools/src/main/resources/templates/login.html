@@ -1,84 +1,108 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Taco Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
         }
 
-        h1 {
-            color: #ffa500;
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-        }
-
-        div {
-            color: #d9534f;
-            margin: 10px 0;
-        }
-
-        form {
-            width: 300px;
-            margin: 0 auto;
+        .login-form {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
+            padding: 40px;
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
+        .login-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
             color: #333;
         }
 
-        input {
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .input-group input {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
         }
 
-        input[type="submit"] {
-            background-color: #ffa500;
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
             color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        a {
-            color: #ffa500;
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-link {
+            text-align: center;
+        }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-<h1>Login</h1>
-<img th:src="@{/images/TacoCloudLogin.png}">
-
-<div th:if="${error}">
-    Unable to login. Check your username and password.
+<div class="container">
+    <form class="login-form" action="login" method="post">
+        <h2>Login to Your Account</h2>
+        <div class="input-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit">Login</button>
+        <p class="register-link">Don't have an account? <a href="register.html">Register here</a></p>
+    </form>
 </div>
-<form method="post" th:action="@{/login}" id="loginForm">
-<p>New here? Click <a th:href="@{/register}">here</a> to register.</p>
-<label for="username">Username: </label>
-<input type="text" name="username" id="username" /><br/>
-
-<label for="password">Password: </label>
-<input type="password" name="password" id="password" /><br/>
-
-<input type="submit" value="Login"/>
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-</form>
 </body>
 </html>
