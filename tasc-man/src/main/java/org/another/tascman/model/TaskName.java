@@ -1,10 +1,12 @@
 package org.another.tascman.model;
 
 import jakarta.persistence.*;
+import jdk.jfr.BooleanFlag;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,12 +22,15 @@ public class TaskName {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
-    String  nameTask;
+    String taskName;
 
-    @Builder.Default
-    Instant createAt = Instant.now();
+    Instant creationDate = Instant.now();
 
-    @OneToMany
-    @JoinColumn(name = "task_name_id", referencedColumnName = "id")
-    List<AnderTask> anderTasks;
+    @Override
+    public String toString() {
+        return "Task Name" +
+                "id=" + id +
+                ", taskName='" + taskName + '\'' +
+                ", creationDate=" + creationDate;
+    }
 }

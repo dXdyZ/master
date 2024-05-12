@@ -1,13 +1,17 @@
 package org.another.tascman.controller;
 
+
 import jakarta.validation.Valid;
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
 import org.another.tascman.repository.AnderTaskRepository;
 import org.another.tascman.repository.TaskRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Transactional
 @RequestMapping("/api")
 public class ApiController {
     private TaskRepository taskRepository;
@@ -18,25 +22,35 @@ public class ApiController {
         this.anderTaskRepository = anderTaskRepository;
     }
 
-    @GetMapping("/getTaskName")
+    @GetMapping("/gTN")
     public Iterable<TaskName> getTaskName() {
         return taskRepository.findAll();
     }
 
-    @GetMapping("/getAnderTask")
+    @GetMapping("/gAT")
     public Iterable<AnderTask> getAnderTask() {
         return anderTaskRepository.findAll();
     }
 
-    @PostMapping("/postTaskName")
-    public Iterable<TaskName> postTaskName(@Valid @RequestBody TaskName taskName) {
+    @PostMapping("/pTN")
+    public void postTaskName(@Valid @RequestBody TaskName taskName) {
         taskRepository.save(taskName);
-        return taskRepository.findAll();
     }
 
-    @PostMapping("/postAnderTaskName")
-    public Iterable<AnderTask> postTaskName(@Valid @RequestBody AnderTask anderTask) {
+    @PostMapping("/pAT")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void postAnderTask(@Valid @RequestBody AnderTask anderTask) {
         anderTaskRepository.save(anderTask);
-        return anderTaskRepository.findAll();
+    }
+
+    @DeleteMapping("/dlTN")
+    public void deleteTaskName(@RequestParam(value = "id") Long id) {
+        anderTaskRepository.deleteByTaskNameId(id);
+        taskRepository.deleteById(id);
+    }
+
+    @DeleteMapping("/dlAT")
+    public void deleteAnderTask(@RequestParam(value = "id") Long id) {
+        anderTaskRepository.deleteById(id);
     }
 }

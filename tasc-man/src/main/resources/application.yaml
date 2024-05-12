@@ -6,4 +6,4 @@ spring:
     password: werpipl15
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none

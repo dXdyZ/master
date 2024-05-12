@@ -1,10 +1,14 @@
 package org.another.tascman.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.Date;
 
 
 @Entity
@@ -20,10 +24,21 @@ public class AnderTask {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
-    @Builder.Default
-    Instant createAt = Instant.now();
+    @Column(nullable = false)
+    String subtaskText;
 
-    String anderTask;
+    Instant creationDate = Instant.now();
 
-    
+    @ManyToOne()
+    @JoinColumn(name = "task_name_id")
+    TaskName taskName;
+
+    @Override
+    public String toString() {
+        return "Ander Task: " +
+                "subtaskText='" + subtaskText + '\'' +
+                ", creationDate=" + creationDate +
+                ", taskNameId=" + taskName.getId();
+    }
 }
+
