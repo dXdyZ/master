@@ -35,10 +35,11 @@ public class AnderTask {
 
     @Override
     public String toString() {
-        return "Ander Task: " +
-                "subtaskText='" + subtaskText + '\'' +
-                ", creationDate=" + creationDate +
-                ", taskNameId=" + taskName.getId();
+        return "Ander Task: " + "\n" +
+                "subtask Text = " + subtaskText + "\n" +
+                "task Name = " + taskName.getTaskName() + "\n" +
+                "task Name Id = " + taskName.getId() + "\n" +
+                "creation Date = " + creationDate + "\n";
     }
 }
 

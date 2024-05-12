@@ -1,7 +1,15 @@
 package org.another.tascman.prog;
 
+import org.another.tascman.TascManApplication;
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -97,7 +105,7 @@ public class ServerManager implements Runnable {
                     );
                     // Получаем добавленную сущность TaskName из ответа сервера
                     TaskName createdTaskName = responsePTN.getBody();
-                    System.out.println("Сушность TaskName c id" + createdTaskName.getId() +  "успешно добавлена");
+                    System.out.println("Сушность TaskName успешно добавлена");
                 } catch (HttpClientErrorException e) {
                     System.err.println("Ошибка добавление сущности TaskName: " + e.getRawStatusCode() + " " + e.getStatusText());
                 }
@@ -129,7 +137,7 @@ public class ServerManager implements Runnable {
                     );
                     // Получаем добавленную сущность AnderTask из ответа сервера
                     AnderTask createdAnderTask = responsePAT.getBody();
-                    System.out.println("Сушность AnderTask c id" + createdAnderTask.getId() +  "успешно добавлена");
+                    System.out.println("Сушность AnderTask успешно добавлена");
                 } catch (HttpClientErrorException e) {
                     System.err.println("Ошибка добавление сущности AnderTask: " + e.getRawStatusCode() + " " + e.getStatusText());
                 }
@@ -147,7 +155,7 @@ public class ServerManager implements Runnable {
                 try {
                     // Выполнение запроса DELETE
                     dTN.delete(url);
-                    System.out.println("Сущность TaskName с id " + id + " успешно удалена");
+                    System.out.println("Сущность TaskName успешно удалена");
                 } catch (HttpClientErrorException ex) {
                     System.err.println("Ошибка удаления сущности TaskName: " + ex.getRawStatusCode() + " " + ex.getStatusText());
                 }
@@ -165,7 +173,7 @@ public class ServerManager implements Runnable {
                 try {
                     // Выполнение запроса DELETE
                     dAT.delete(url);
-                    System.out.println("Сущность AnderTask с id " + id + " успешно удалена");
+                    System.out.println("Сущность AnderTask успешно удалена");
                 } catch (HttpClientErrorException ex) {
                     System.err.println("Ошибка удаления сущности AnderTask: " + ex.getRawStatusCode() + " " + ex.getStatusText());
                 }
@@ -199,6 +207,8 @@ public class ServerManager implements Runnable {
                 } catch (HttpClientErrorException e) {
                     System.err.println("Ошибка удаления: " + e.getRawStatusCode() + " " + e.getStatusText());
                 }
+            } else if (input.equals("StopS")) {
+                System.out.println("В разработке");
             } else {
                 for (String com : commands) {
                     System.out.println(com);

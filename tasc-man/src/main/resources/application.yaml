@@ -7,3 +7,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+logging:
+  file:
+    path: ./logs/
+    name: TaskLog.log
+  level:
+    root: warn
+    org.another.tascman.controller: DEBUG
+    org.another.tascman.prog: DEBUG

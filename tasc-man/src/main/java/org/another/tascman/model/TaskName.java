@@ -28,9 +28,9 @@ public class TaskName {
 
     @Override
     public String toString() {
-        return "Task Name" +
-                "id=" + id +
-                ", taskName='" + taskName + '\'' +
-                ", creationDate=" + creationDate;
+        return "Task Name:" + "\n" +
+                "id = " + id + "\n" +
+                "task Name = " + taskName + "\n" +
+                "creation Date = " + creationDate + "\n";
     }
 }
