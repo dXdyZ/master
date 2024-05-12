@@ -53,4 +53,15 @@ public class ApiController {
     public void deleteAnderTask(@RequestParam(value = "id") Long id) {
         anderTaskRepository.deleteById(id);
     }
+
+    @DeleteMapping("/dAllTN")
+    public void deleteAllTaskName() {
+        anderTaskRepository.deleteAll();
+        taskRepository.deleteAll();
+    }
+
+    @DeleteMapping("/dAllAT")
+    public void deleteAllAnderTask() {
+        anderTaskRepository.deleteAll();
+    }
 }
