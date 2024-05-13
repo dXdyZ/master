@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 public class ApiController {
     private TaskRepository taskRepository;
     private AnderTaskRepository anderTaskRepository;
+    private TaskName taskName = new TaskName();
 
-    public ApiController(TaskRepository taskRepository, AnderTaskRepository anderTaskRepository) {
+    public ApiController(TaskRepository taskRepository,
+                         AnderTaskRepository anderTaskRepository) {
         this.taskRepository = taskRepository;
         this.anderTaskRepository = anderTaskRepository;
     }

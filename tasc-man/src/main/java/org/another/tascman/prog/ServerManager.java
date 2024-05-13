@@ -47,6 +47,7 @@ public class ServerManager implements Runnable {
                 add("dAT - delete ander task, удаление происходит по id");
                 add("dAllTN - all delete task name");
                 add("dAllAT - all delete ander task");
+                add("StopS - завершение работы приложения и сервера");
             }
         };
 
@@ -208,7 +209,9 @@ public class ServerManager implements Runnable {
                     System.err.println("Ошибка удаления: " + e.getRawStatusCode() + " " + e.getStatusText());
                 }
             } else if (input.equals("StopS")) {
-                System.out.println("В разработке");
+                System.out.println("Завершение работы приложения...");
+                stop();
+                System.exit(0);
             } else {
                 for (String com : commands) {
                     System.out.println(com);
