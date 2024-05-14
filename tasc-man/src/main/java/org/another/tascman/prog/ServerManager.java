@@ -51,7 +51,7 @@ public class ServerManager implements Runnable {
             }
         };
 
-        final RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
 
 
         while (isRunning) {
@@ -60,8 +60,8 @@ public class ServerManager implements Runnable {
                 /**
                  * Получение данных из сущности taskName
                  */
-                final RestTemplate gTN = new RestTemplate();
-                final ResponseEntity<List<TaskName>> responseGTN = gTN.exchange(
+                RestTemplate gTN = new RestTemplate();
+                ResponseEntity<List<TaskName>> responseGTN = gTN.exchange(
                         "http://localhost:8080/api/gTN",
                         HttpMethod.GET,
                         null,
@@ -77,15 +77,15 @@ public class ServerManager implements Runnable {
                 /**
                  * Получение данных из сущности anderTask
                  */
-                final RestTemplate gAT = new RestTemplate();
-                final ResponseEntity<List<AnderTask>> responseGAT = gAT.exchange(
+                RestTemplate gAT = new RestTemplate();
+                ResponseEntity<List<AnderTask>> responseGAT = gAT.exchange(
                         "http://localhost:8080/api/gAT",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<AnderTask>>() {}
                 );
 
-                final List<AnderTask> gATResult = responseGAT.getBody();
+                List<AnderTask> gATResult = responseGAT.getBody();
 
                 for (AnderTask an : gATResult) {
                     System.out.println(an.toString());
@@ -208,6 +208,17 @@ public class ServerManager implements Runnable {
                 } catch (HttpClientErrorException e) {
                     System.err.println("Ошибка удаления: " + e.getRawStatusCode() + " " + e.getStatusText());
                 }
+            } else if (input.equals("gTAT")) {
+                RestTemplate gTAT = new RestTemplate();
+                System.out.println("Введите id главной задачи");
+                Long id = scanner.nextLong();
+
+                String url = "http://localhost:8080/api/gTAT?id=" + id;
+
+                /**
+                 *Допиливать
+                 */
+
             } else if (input.equals("StopS")) {
                 System.out.println("Завершение работы приложения...");
                 stop();

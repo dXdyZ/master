@@ -34,6 +34,11 @@ public class ApiController {
         return anderTaskRepository.findAll();
     }
 
+    @GetMapping("/gTAT")
+    public Iterable<AnderTask> getAnderAndTaskName(@RequestParam(value = "id") Long id) {
+        return anderTaskRepository.findAllByTaskNameId(id);
+    }
+
     @PostMapping("/pTN")
     public void postTaskName(@Valid @RequestBody TaskName taskName) {
         taskRepository.save(taskName);
@@ -67,3 +72,6 @@ public class ApiController {
         anderTaskRepository.deleteAll();
     }
 }
+
+
+

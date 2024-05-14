@@ -1,14 +1,11 @@
 package org.another.tascman.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSetter;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
-import java.util.Date;
 
 
 @Entity
@@ -41,5 +38,13 @@ public class AnderTask {
                 "task Name Id = " + taskName.getId() + "\n" +
                 "creation Date = " + creationDate + "\n";
     }
+
+    public String toStringTaskNameForId() {
+        return "Ander Task: " + "\n" +
+                "id = " + id + "\n" +
+                "subtask Text = " + subtaskText + "\n" +
+                "creation date = " + creationDate + "\n";
+    }
 }
+
 

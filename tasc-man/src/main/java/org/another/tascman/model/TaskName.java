@@ -1,13 +1,10 @@
 package org.another.tascman.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.BooleanFlag;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
+
 
 @Entity
 @Getter
@@ -33,4 +30,5 @@ public class TaskName {
                 "task Name = " + taskName + "\n" +
                 "creation Date = " + creationDate + "\n";
     }
+
 }
