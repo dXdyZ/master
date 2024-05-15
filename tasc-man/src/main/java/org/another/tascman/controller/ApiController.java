@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Transactional
 @RequestMapping("/api")
@@ -35,7 +37,7 @@ public class ApiController {
     }
 
     @GetMapping("/gTAT")
-    public Iterable<AnderTask> getAnderAndTaskName(@RequestParam(value = "id") Long id) {
+    public List<AnderTask> getAnderAndTaskName(@RequestParam(value = "id") Long id) {
         return anderTaskRepository.findAllByTaskNameId(id);
     }
 

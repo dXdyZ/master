@@ -18,7 +18,6 @@ public interface AnderTaskRepository extends JpaRepository<AnderTask, Long> {
     @Query("DELETE FROM AnderTask at WHERE at.taskName.id = :id")
     void deleteByTaskNameId(@Param("id") Long id);
 
-    @Query("SELECT at.id, at.subtaskText, at.creationDate FROM AnderTask at WHERE at.taskName.id = :id")
-    Iterable<AnderTask> findAllByTaskNameId(@Param("id") Long id);
-
+    @Query("SELECT at FROM AnderTask at WHERE at.taskName.id = :id")
+    List<AnderTask> findAllByTaskNameId(@Param("id") Long id);
 }

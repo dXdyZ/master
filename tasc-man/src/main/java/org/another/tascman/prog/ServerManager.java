@@ -1,15 +1,7 @@
 package org.another.tascman.prog;
 
-import org.another.tascman.TascManApplication;
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +40,7 @@ public class ServerManager implements Runnable {
                 add("dAllTN - all delete task name");
                 add("dAllAT - all delete ander task");
                 add("StopS - завершение работы приложения и сервера");
+                add("gTAT - Получить все подзадачи по главной задаче");
             }
         };
 
@@ -215,9 +208,18 @@ public class ServerManager implements Runnable {
 
                 String url = "http://localhost:8080/api/gTAT?id=" + id;
 
-                /**
-                 *Допиливать
-                 */
+                ResponseEntity<List<AnderTask>> responseGTAT = gTAT.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<AnderTask>>() {}
+                );
+
+                List<AnderTask> gTATResult = responseGTAT.getBody();
+
+                for (AnderTask gTan : gTATResult) {
+                    System.out.println(gTan.toStringTaskNameForId());
+                }
 
             } else if (input.equals("StopS")) {
                 System.out.println("Завершение работы приложения...");
