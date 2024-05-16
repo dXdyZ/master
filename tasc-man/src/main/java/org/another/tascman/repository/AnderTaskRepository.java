@@ -20,4 +20,8 @@ public interface AnderTaskRepository extends JpaRepository<AnderTask, Long> {
 
     @Query("SELECT at FROM AnderTask at WHERE at.taskName.id = :id")
     List<AnderTask> findAllByTaskNameId(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE AnderTask t SET t.subtaskText = :newAnderTask WHERE t.id = :id")
+    void updateAnderTaskBySubtaskText(Long id, String newAnderTask);
 }

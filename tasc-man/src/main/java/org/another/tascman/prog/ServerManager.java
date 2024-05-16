@@ -225,6 +225,25 @@ public class ServerManager implements Runnable {
                 System.out.println("Завершение работы приложения...");
                 stop();
                 System.exit(0);
+            } else if (input.equals("ptTN")) {
+                RestTemplate ptTN = new RestTemplate();
+                System.out.printf("Введите имя главной задачи");
+                String taskNameOld = scanner.nextLine();
+
+                scanner.nextLine();
+
+                System.out.printf("Введите новое имя для главной задачи");
+                String newTaskName = scanner.nextLine();
+
+                String url = "http://localhost:8080/api/ptTN?taskName=" + taskNameOld + "&newTaskName=" + newTaskName;
+
+                try {
+                    ptTN.patchForObject(url, null, Void.class);
+                    System.out.printf("Успешное изменение главной задачи");
+                } catch (HttpClientErrorException e) {
+                    System.err.println("Ошибка изменение главной задачи: " + e.getRawStatusCode() + e.getStatusText());
+                }
+
             } else {
                 for (String com : commands) {
                     System.out.println(com);

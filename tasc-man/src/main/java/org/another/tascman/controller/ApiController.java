@@ -42,6 +42,7 @@ public class ApiController {
     }
 
     @PostMapping("/pTN")
+    @ResponseStatus(HttpStatus.CREATED)
     public void postTaskName(@Valid @RequestBody TaskName taskName) {
         taskRepository.save(taskName);
     }
@@ -50,6 +51,18 @@ public class ApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postAnderTask(@Valid @RequestBody AnderTask anderTask) {
         anderTaskRepository.save(anderTask);
+    }
+
+    @PatchMapping("/ptTN")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void patchTaskName(@RequestParam(value = "taskName") String taskName, @RequestParam(value = "newTaskName") String newTaskName) {
+        taskRepository.updateTaskNameById(taskName, newTaskName);
+    }
+
+    @PatchMapping("/ptAT")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void patchAnderTask(@RequestParam(value = "id") Long id, @RequestParam(value = "nAT") String nAT) {
+        anderTaskRepository.updateAnderTaskBySubtaskText(id, nAT);
     }
 
     @DeleteMapping("/dlTN")
