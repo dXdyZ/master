@@ -33,6 +33,7 @@ public class AnderTask {
     @Override
     public String toString() {
         return "Ander Task: " + "\n" +
+                "id = " + id + "\n" +
                 "subtask Text = " + subtaskText + "\n" +
                 "task Name = " + taskName.getTaskName() + "\n" +
                 "task Name Id = " + taskName.getId() + "\n" +

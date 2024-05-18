@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,6 @@ public interface AnderTaskRepository extends JpaRepository<AnderTask, Long> {
     List<AnderTask> findAllByTaskNameId(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE AnderTask t SET t.subtaskText = :newAnderTask WHERE t.id = :id")
-    void updateAnderTaskBySubtaskText(Long id, String newAnderTask);
+    @Query("UPDATE AnderTask a SET a.subtaskText = :subtaskText WHERE a.id = :id")
+    void updateAnderTaskBySubtaskText(@Param("id") Long id, @Param("subtaskText") String subtaskText);
 }

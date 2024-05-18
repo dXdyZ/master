@@ -1,13 +1,31 @@
 package org.another.tascman.prog;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.StringEntity;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpHeaders;
 
+import java.io.IOException;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -39,8 +57,11 @@ public class ServerManager implements Runnable {
                 add("dAT - delete ander task, удаление происходит по id");
                 add("dAllTN - all delete task name");
                 add("dAllAT - all delete ander task");
-                add("StopS - завершение работы приложения и сервера");
                 add("gTAT - Получить все подзадачи по главной задаче");
+                add("ptTN - patch запрос для изменения имени главной задачи");
+                add("ptAT - patch запрос для изменнения поздазачи");
+                add("StopS - завершение работы приложения и сервера");
+
             }
         };
 
@@ -226,24 +247,100 @@ public class ServerManager implements Runnable {
                 stop();
                 System.exit(0);
             } else if (input.equals("ptTN")) {
-                RestTemplate ptTN = new RestTemplate();
-                System.out.printf("Введите имя главной задачи");
-                String taskNameOld = scanner.nextLine();
+                System.out.println("Введите имя главной задачи: ");
+                String oldTaskName = scanner.nextLine();
 
-                scanner.nextLine();
+                String getUrl = "http://localhost:8080/api/gTND?taskName=" + oldTaskName;
+                String patchUrlTemplate = "http://localhost:8080/api/ptTN?taskName=%s&newTaskName=%s";
 
-                System.out.printf("Введите новое имя для главной задачи");
-                String newTaskName = scanner.nextLine();
+                try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                    // Выполнение GET запроса
+                    HttpGet getRequest = new HttpGet(getUrl);
+                    try (CloseableHttpResponse getResponse = httpClient.execute(getRequest)) {
+                        int getResponseCode = getResponse.getStatusLine().getStatusCode();
+                        if (getResponseCode == 200) {
+                            System.out.println("Задача существует");
 
-                String url = "http://localhost:8080/api/ptTN?taskName=" + taskNameOld + "&newTaskName=" + newTaskName;
+                            System.out.println("Введите новое имя для задачи: ");
+                            String newTaskName = scanner.nextLine();
 
-                try {
-                    ptTN.patchForObject(url, null, Void.class);
-                    System.out.printf("Успешное изменение главной задачи");
-                } catch (HttpClientErrorException e) {
-                    System.err.println("Ошибка изменение главной задачи: " + e.getRawStatusCode() + e.getStatusText());
+                            String patchUrl = String.format(patchUrlTemplate, oldTaskName, newTaskName);
+
+                            // Выполнение PATCH запроса
+                            HttpPatch patchRequest = new HttpPatch(patchUrl);
+                            patchRequest.setHeader("Content-type", "application/json");
+                            patchRequest.setEntity(new StringEntity(""));
+
+                            try (CloseableHttpResponse patchResponse = httpClient.execute(patchRequest)) {
+                                int patchResponseCode = patchResponse.getStatusLine().getStatusCode();
+                                if (patchResponseCode == 202) {
+                                    System.out.println("Успешное изменение главной задачи");
+                                } else {
+                                    System.out.println("Что-то пошло не так: " + patchResponseCode);
+                                }
+                            }
+                        } else {
+                            System.out.println("Задача не была найдена: " + getResponseCode);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.err.println("Произошла ошибка: " + e.getMessage());
+                }
+            } else if (input.equals("ptAT")) {
+                RestTemplate ptAT = new RestTemplate();
+                System.out.println("Будут выведены все подзадачи для вашего удобства");
+
+                String url = "http://localhost:8080/api/gAT";
+
+                ResponseEntity<List<AnderTask>> response = restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<AnderTask>>() {}
+                );
+
+                List<AnderTask> tasks = response.getBody();
+                if (tasks != null) {
+                    for (AnderTask task : tasks) {
+                        System.out.println(task.toStringTaskNameForId());
+                    }
                 }
 
+                HttpClient client = HttpClient.newBuilder()
+                                .version(HttpClient.Version.HTTP_2)
+                                        .connectTimeout(Duration.ofSeconds(10))
+                                                .build();
+
+                System.out.println("Введите id подзадачи для её изменения:");
+                Long id = scanner.nextLong();
+
+                scanner.nextLine(); // Consume newline left-over
+
+                System.out.println("Введите новый текст подзадачи:");
+                String newTaskText = scanner.nextLine();
+
+                String patchUrl = "http://localhost:8080/api/ptAT";
+                URI uri = URI.create(patchUrl);
+                // Create a JSON object with the new task text
+                String json = "{" + "\n" + "\"id\":" + id + "," +
+                        "\n" + "\"subtaskText\":" + "\"" + newTaskText + "\"" +
+                        "\n" + "}";
+
+                try {
+                    HttpRequest requestPatchTN = HttpRequest.newBuilder()
+                            .uri(uri)
+                            .timeout(Duration.ofSeconds(1))
+                            .header("Content-Type", "application/json")
+                            .method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+                            .build();
+
+                    HttpResponse<String> responsePTAT = client.send(requestPatchTN, HttpRequest.BodyPublishers.ofString());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Произошла ошибка: " + e.getMessage());
+                }
             } else {
                 for (String com : commands) {
                     System.out.println(com);

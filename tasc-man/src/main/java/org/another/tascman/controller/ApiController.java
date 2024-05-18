@@ -2,6 +2,8 @@ package org.another.tascman.controller;
 
 
 import jakarta.validation.Valid;
+import org.another.tascman.DTO.DataTransferAnderTask;
+import org.another.tascman.DTO.DataTransferTaskName;
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
 import org.another.tascman.repository.AnderTaskRepository;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Transactional
@@ -29,6 +32,16 @@ public class ApiController {
     @GetMapping("/gTN")
     public Iterable<TaskName> getTaskName() {
         return taskRepository.findAll();
+    }
+
+    @GetMapping("/gTND")
+    public boolean getTaskNameById(@RequestParam(value = "taskName") String taskName) {
+        TaskName test = taskRepository.findByIdTaskName(taskName);
+        if (test != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @GetMapping("/gAT")
@@ -51,18 +64,19 @@ public class ApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postAnderTask(@Valid @RequestBody AnderTask anderTask) {
         anderTaskRepository.save(anderTask);
+        System.out.println(AnderTask.builder().toString());
     }
 
     @PatchMapping("/ptTN")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void patchTaskName(@RequestParam(value = "taskName") String taskName, @RequestParam(value = "newTaskName") String newTaskName) {
-        taskRepository.updateTaskNameById(taskName, newTaskName);
+    public void patchTaskName(@Valid @RequestBody DataTransferTaskName dtoTaskName) {
+        taskRepository.updateTaskNameById(dtoTaskName.getOldName(), dtoTaskName.getNewName());
     }
 
     @PatchMapping("/ptAT")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void patchAnderTask(@RequestParam(value = "id") Long id, @RequestParam(value = "nAT") String nAT) {
-        anderTaskRepository.updateAnderTaskBySubtaskText(id, nAT);
+    public void patchAnderTask(@Valid @RequestBody DataTransferAnderTask dtoAnderTask) {
+        anderTaskRepository.updateAnderTaskBySubtaskText(dtoAnderTask.getId(), dtoAnderTask.getSubtaskText());
     }
 
     @DeleteMapping("/dlTN")
