@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @Transactional
@@ -35,13 +35,8 @@ public class ApiController {
     }
 
     @GetMapping("/gTND")
-    public boolean getTaskNameById(@RequestParam(value = "taskName") String taskName) {
-        TaskName test = taskRepository.findByIdTaskName(taskName);
-        if (test != null) {
-            return true;
-        } else {
-            return false;
-        }
+    public void getTaskNameById(@RequestParam(value = "taskName") String taskName) {
+         taskRepository.findByIdTaskName(taskName);
     }
 
     @GetMapping("/gAT")
@@ -64,7 +59,6 @@ public class ApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postAnderTask(@Valid @RequestBody AnderTask anderTask) {
         anderTaskRepository.save(anderTask);
-        System.out.println(AnderTask.builder().toString());
     }
 
     @PatchMapping("/ptTN")

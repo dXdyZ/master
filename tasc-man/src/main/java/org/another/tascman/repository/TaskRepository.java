@@ -14,7 +14,7 @@ public interface TaskRepository extends JpaRepository<TaskName, Long> {
 
     @Modifying
     @Query("UPDATE TaskName t SET t.taskName = :newTaskName WHERE t.taskName = :id")
-    void updateTaskNameById(String id, String newTaskName);
+    void updateTaskNameById(@Param("id") String id,@Param("newTaskName") String newTaskName);
 
     @Query("SELECT at FROM TaskName at WHERE at.taskName = :taskName")
     TaskName findByIdTaskName(@Param("taskName") String taskName);

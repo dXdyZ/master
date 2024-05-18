@@ -1,24 +1,16 @@
 package org.another.tascman.prog;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
+
 import org.another.tascman.model.AnderTask;
 import org.another.tascman.model.TaskName;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.entity.StringEntity;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.net.http.HttpRequest.BodyPublishers;
+
 
 import java.io.IOException;
 import java.net.*;
@@ -250,43 +242,68 @@ public class ServerManager implements Runnable {
                 System.out.println("Введите имя главной задачи: ");
                 String oldTaskName = scanner.nextLine();
 
-                String getUrl = "http://localhost:8080/api/gTND?taskName=" + oldTaskName;
-                String patchUrlTemplate = "http://localhost:8080/api/ptTN?taskName=%s&newTaskName=%s";
+                RestTemplate gTAT = new RestTemplate();
 
-                try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                    // Выполнение GET запроса
-                    HttpGet getRequest = new HttpGet(getUrl);
-                    try (CloseableHttpResponse getResponse = httpClient.execute(getRequest)) {
-                        int getResponseCode = getResponse.getStatusLine().getStatusCode();
-                        if (getResponseCode == 200) {
-                            System.out.println("Задача существует");
+                String url = "http://localhost:8080/api/gTND?taskName=" + oldTaskName;
 
-                            System.out.println("Введите новое имя для задачи: ");
-                            String newTaskName = scanner.nextLine();
+                ResponseEntity<List<TaskName>> responseGTAT = gTAT.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<TaskName>>() {}
+                );
 
-                            String patchUrl = String.format(patchUrlTemplate, oldTaskName, newTaskName);
+                List<TaskName> gTATResult = responseGTAT.getBody();
 
-                            // Выполнение PATCH запроса
-                            HttpPatch patchRequest = new HttpPatch(patchUrl);
-                            patchRequest.setHeader("Content-type", "application/json");
-                            patchRequest.setEntity(new StringEntity(""));
+                int statusCode = responseGTAT.getStatusCode().value();
 
-                            try (CloseableHttpResponse patchResponse = httpClient.execute(patchRequest)) {
-                                int patchResponseCode = patchResponse.getStatusLine().getStatusCode();
-                                if (patchResponseCode == 202) {
-                                    System.out.println("Успешное изменение главной задачи");
-                                } else {
-                                    System.out.println("Что-то пошло не так: " + patchResponseCode);
-                                }
-                            }
+                HttpClient client = HttpClient.newBuilder()
+                        .version(HttpClient.Version.HTTP_2)
+                        .connectTimeout(Duration.ofSeconds(10))
+                        .build();
+
+                if (statusCode == 200) {
+                    System.out.println("Задача существует");
+
+                    System.out.println("Введите нове имя для здачи");
+                    String newTaskName = scanner.nextLine();
+
+                    String patchURL = "http://localhost:8080/api/ptTN";
+                    URI uri = URI.create(patchURL);
+
+                    //Создание json запроса
+                    String json = "{" + "\n" +
+                            "\"oldName\":" + "\"" + oldTaskName + "\"," + "\n" +
+                            "\"newName\":" + "\"" + newTaskName + "\"" + "\n" +
+                            "}";
+
+                    try {
+                        //Перадача тела запроса
+                        HttpRequest requestPTNT = HttpRequest.newBuilder()
+                                .uri(uri)
+                                .timeout(Duration.ofSeconds(1))
+                                .header("Content-Type", "application/json")
+                                .method("PATCH", BodyPublishers.ofString(json))
+                                .build();
+
+                        //Отправка запроса
+                        HttpResponse<String> responsePTNT = client.send(requestPTNT, BodyHandlers.ofString());
+
+                        if (responsePTNT.statusCode() == 202) {
+                            System.out.println("Status code: " + responsePTNT.statusCode() + " - update");
                         } else {
-                            System.out.println("Задача не была найдена: " + getResponseCode);
+                            System.out.println("Status code: " + responsePTNT.statusCode() + " - no update " + responsePTNT.body()) ;
                         }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.err.println("Произошла ошибка: " + e.getMessage());
+                } else {
+                    System.out.println("Задача не была найдена: " + statusCode);
                 }
+
             } else if (input.equals("ptAT")) {
                 RestTemplate ptAT = new RestTemplate();
                 System.out.println("Будут выведены все подзадачи для вашего удобства");
@@ -307,6 +324,7 @@ public class ServerManager implements Runnable {
                     }
                 }
 
+                //Создание клиента
                 HttpClient client = HttpClient.newBuilder()
                                 .version(HttpClient.Version.HTTP_2)
                                         .connectTimeout(Duration.ofSeconds(10))
@@ -315,27 +333,35 @@ public class ServerManager implements Runnable {
                 System.out.println("Введите id подзадачи для её изменения:");
                 Long id = scanner.nextLong();
 
-                scanner.nextLine(); // Consume newline left-over
+                scanner.nextLine();
 
                 System.out.println("Введите новый текст подзадачи:");
                 String newTaskText = scanner.nextLine();
 
                 String patchUrl = "http://localhost:8080/api/ptAT";
                 URI uri = URI.create(patchUrl);
-                // Create a JSON object with the new task text
+                // Создание json запроса
                 String json = "{" + "\n" + "\"id\":" + id + "," +
                         "\n" + "\"subtaskText\":" + "\"" + newTaskText + "\"" +
                         "\n" + "}";
 
                 try {
+                    //Передача тела запроса
                     HttpRequest requestPatchTN = HttpRequest.newBuilder()
                             .uri(uri)
                             .timeout(Duration.ofSeconds(1))
                             .header("Content-Type", "application/json")
-                            .method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+                            .method("PATCH", BodyPublishers.ofString(json))
                             .build();
 
-                    HttpResponse<String> responsePTAT = client.send(requestPatchTN, HttpRequest.BodyPublishers.ofString());
+                    //Отправка запроса
+                    HttpResponse<String> responsePTAT = client.send(requestPatchTN, BodyHandlers.ofString());
+
+                    if (responsePTAT.statusCode() == 202) {
+                        System.out.println("Status code: " + responsePTAT.statusCode() + " - update");
+                    } else {
+                        System.out.println("Status code: " + responsePTAT.statusCode() + " - no update" + responsePTAT.body());
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
