@@ -1,10 +1,10 @@
-FROM openjdk:17-jdk-alpine
-LABEL authors="tttti"
+FROM mysql:latest
 
-EXPOSE 8080
+#Установка началиных параметров Mysql
+ENV MYSQL_ROOT_PASSWORD=werpipl15
+ENV MYSQL_DATABASES=mydatabase
+ENV MYSQL_USER=userR
+ENV MYSQL_PASSWORD=userRpass
 
-WORKDIR /app
-
-COPY build/libs/new-taco-0.0.1-SNAPSHOT.jar /app/taco.jar
-
-CMD ["java", "-jar", "taco.jar"]
+#Открытие порта
+EXPOSE 9999

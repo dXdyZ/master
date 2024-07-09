@@ -1,9 +1,19 @@
 spring:
   application:
     name: new-taco
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/taconew
-    username: root
-    password: werpipl15
+  cassandra:
+      keyspace-name: taco_cloud
+      schema-action: recreate
+      local-datacenter: datacenter1
+
+
+
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:9999/mydatabase
+#    username: userR
+#    password: userRpass
+#    url: jdbc:mysql://localhost:3306/taconew
+#    username: root
+#    password: werpipl15
 
