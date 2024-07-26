@@ -8,4 +8,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+server:
+  port: 8080
 
+logging:
+  file:
+    path: /var/logs/
+    name: TacoCloud.log
+  level:
+    root: info
+    org:
+      springframework:
+        security: debug

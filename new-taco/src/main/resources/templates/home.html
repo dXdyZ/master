@@ -7,6 +7,7 @@
 </head>
 <body>
 <h1>Welcome to...</h1>
-<img th:src="@{/image/TacoCloud.jpg}">
+<img th:src="@{image/TacoCloud.jpg}">
 </body>
+<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 </html>

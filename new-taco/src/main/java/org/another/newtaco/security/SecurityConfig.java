@@ -34,8 +34,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests((authorization) -> authorization
-                        .requestMatchers("/design", "/orders").hasRole("USER")
-                        .requestMatchers("/", "/**").permitAll()
+                        .requestMatchers("/design", "/orders/**").authenticated()
+                        .requestMatchers("/", "/register").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/image/**").permitAll()//включение стилей
                 )
                     .httpBasic(Customizer.withDefaults())
                     .formLogin(Customizer.withDefaults())

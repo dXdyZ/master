@@ -23,6 +23,10 @@ public class TacoOrder implements Serializable {
     private Long id;
     private Date placeAt;
 
+    @ManyToOne
+    private User user;
+
+    /*
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
     @NotBlank(message = "Street is required")
@@ -33,6 +37,7 @@ public class TacoOrder implements Serializable {
     private String deliveryState;
     @NotBlank(message = "Zip code is required")
     private String deliveryZip;
+     */
     @CreditCardNumber(message = "Not a valid credit cart number")
     private String ccNumber;
     @Pattern(regexp = "^(0[1-9]|1[0-2])([\\/])([2-9][0-9])$", message = "Must be formatted MM/YY")

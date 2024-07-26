@@ -58,6 +58,7 @@
             <br/>
             <button>Submit Your Taco</button>
         </div>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
     </form>
 </body>
 </html>
