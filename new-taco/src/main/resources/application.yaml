@@ -1,4 +1,7 @@
 spring:
+  data:
+    rest:
+      base-path: /api
   application:
     name: new-taco
   datasource:
