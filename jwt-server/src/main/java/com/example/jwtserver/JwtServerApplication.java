@@ -14,4 +14,9 @@ public class JwtServerApplication {
 		SpringApplication.run(JwtServerApplication.class, args);
 	}
 
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
 }

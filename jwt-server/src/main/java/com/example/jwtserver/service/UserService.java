@@ -1,14 +1,17 @@
 package com.example.jwtserver.service;
 
+import com.example.jwtserver.dtos.RegistrUserDto;
 import com.example.jwtserver.enity.User;
 import com.example.jwtserver.repositories.RoleRepo;
 import com.example.jwtserver.repositories.UserRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor //создает конструктор с полями
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
-    private final RoleRepo roleRepo;
+    private final RoleService roleService;
+    private final BCryptPasswordEncoder encoder;
 
     public Optional<User> findByUsername(String username) {
         return userRepo.findByUsername(username);
@@ -41,9 +45,13 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public void createNewUser(User user) {
-        user.setRoles(List.of(roleRepo.findByName("ROLE_USER").get()));
-        userRepo.save(user);
+    public User createNewUser(RegistrUserDto registrUserDto) {
+        User user = new User();
+        user.setEmail(registrUserDto.getEmail());
+        user.setUsername(registrUserDto.getUsername());
+        user.setPassword(encoder.encode(registrUserDto.getPassword()));
+        user.setRoles(List.of(roleService.getUserRole()));
+        return userRepo.save(user);
     }
 }
 
