@@ -10,10 +10,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -37,13 +40,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(csrg -> csrg
+                        .ignoringRequestMatchers("/api/**"))
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .authorizeHttpRequests((authorization) -> authorization
                         .requestMatchers("/design", "/orders/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/API/ingredients").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/API/ingredients/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/ingredients/**").hasAuthority("SCOPE_getIngredients")
+                        .requestMatchers(HttpMethod.POST, "/api/ingredients/**").hasAuthority("SCOPE_writeIngredients")
+                        .requestMatchers(HttpMethod.DELETE, "/api/ingredients/**").hasAuthority("SCOPE_deleteIngredients")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAuthority("SCOPE_getOrders")
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAuthority("SCOPE_writeOrders")
+                        .requestMatchers(HttpMethod.DELETE, "/api/order/**").hasAuthority("SCOPE_deleteOrders")
                         .requestMatchers("/", "/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/API/ingredients").hasRole("USER")
-                        .requestMatchers("/api/**").anonymous()
                         .requestMatchers("/css/**", "/js/**", "/image/**").permitAll()//включение стилей
                 )
                     .httpBasic(Customizer.withDefaults())

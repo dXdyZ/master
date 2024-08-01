@@ -24,14 +24,12 @@ public class IngredientController {
     }
 
     @PostMapping
-    @PreAuthorize("#{hasRole('USER')}")
     @ResponseStatus(HttpStatus.CREATED)
     public Ingredient saveIngredient(@RequestBody Ingredient ingredient) {
         return ingredientRepository.save(ingredient);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("#{hasRole('USER')}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIngredient(@PathVariable("id") String id) {
         ingredientRepository.deleteById(id);
