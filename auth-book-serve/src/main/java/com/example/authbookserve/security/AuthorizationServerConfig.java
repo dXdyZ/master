@@ -53,8 +53,12 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("http://127.0.0.1:9000/login/oauth2/code/taco-admin-client")
+                .scope("getIngredients")
                 .scope("writeIngredients")
                 .scope("deleteIngredients")
+                .scope("getOrders")
+                .scope("writeOrders")
+                .scope("deleteOrders")
                 .scope(OidcScopes.OPENID)
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
