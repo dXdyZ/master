@@ -17,14 +17,4 @@ public class AuthBookServeApplication {
         SpringApplication.run(AuthBookServeApplication.class, args);
     }
 
-    @Bean
-    public ApplicationRunner dataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return args -> {
-            User user = new User();
-            user.setUsername("nuba");
-            user.setPassword("password");
-            userRepository.save(user);
-        };
-    }
-
 }
