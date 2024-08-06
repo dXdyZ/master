@@ -1,0 +1,21 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          tacocloud:
+            issuer-uri: http://127.0.0.1:9000
+            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
+            token-uri: http://127.0.0.1:9000/oauth2/token
+            jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+            user-info-uri: http://127.0.0.1:9000/userinfo
+            user-name-attribute: sub
+        registration:
+          taco-admin-client:
+            provider: tacocloud
+            client-id: taco-admin-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:9000/login/oauth2/code/{registrationId}"
+            scope: writeIngredients, deleteIngredients, openid
+

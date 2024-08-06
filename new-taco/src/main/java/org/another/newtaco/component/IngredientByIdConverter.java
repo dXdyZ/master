@@ -1,14 +1,10 @@
 package org.another.newtaco.component;
 
 import org.another.newtaco.entity.Ingredient;
-import org.another.newtaco.entity.Type;
 import org.another.newtaco.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class IngredientByIdConverter implements Converter<String, Ingredient> {

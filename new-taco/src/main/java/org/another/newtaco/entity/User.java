@@ -1,5 +1,6 @@
 package org.another.newtaco.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,17 +9,16 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @RequiredArgsConstructor
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -34,6 +34,7 @@ public class User implements UserDetails {
     private final String phoneNumber;
 
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));

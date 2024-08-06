@@ -1,4 +1,10 @@
 spring:
+  artemis:
+    user: artemis
+    password: artemis
+  jms:
+    template:
+      default-destination: tacocloud.order.queue
   data:
     rest:
       base-path: /api
@@ -16,15 +22,27 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+
+
+  devtools:
+    restart:
+      enabled=false:
 server:
   port: 8080
 
+
 logging:
   file:
-    path: /var/logs/
+    path: /var/log/
     name: TacoCloud.log
   level:
-    root: info
+    root: debug
     org:
       springframework:
-        security: debug
+        security: info
+        jms: debug
+
+
+
+
