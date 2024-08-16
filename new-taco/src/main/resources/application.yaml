@@ -1,10 +1,11 @@
 spring:
-  artemis:
-    user: artemis
-    password: artemis
-  jms:
-    template:
-      default-destination: tacocloud.order.queue
+  #  RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: werpipl15
+
   data:
     rest:
       base-path: /api
@@ -22,12 +23,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9000/oauth2/jwks
-
-
-
-  devtools:
-    restart:
-      enabled=false:
 server:
   port: 8080
 
@@ -41,7 +36,9 @@ logging:
     org:
       springframework:
         security: info
-        jms: debug
+
+
+
 
 
 

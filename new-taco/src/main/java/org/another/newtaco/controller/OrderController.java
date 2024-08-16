@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.another.newtaco.entity.TacoOrder;
 import org.another.newtaco.entity.User;
-import org.another.newtaco.repository.OrderRepository;
+import org.another.newtaco.service.controller_service.OrderService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -19,16 +19,20 @@ import org.springframework.web.bind.support.SessionStatus;
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
 public class OrderController {
+    private OrderService orderService;
 
-    private OrderRepository orderRepository;
-
-    public OrderController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping("/current")
     public String orderForm() {
         return "orderForm";
+    }
+
+    @GetMapping("/allOrders")
+    public void getAllOrdersInMessageBroker() {
+        orderService.getAllOrdersInMessage();
     }
 
     @PostMapping
@@ -37,9 +41,9 @@ public class OrderController {
                                SessionStatus sessionStatus,
                                @AuthenticationPrincipal User user) {
         if (errors.hasErrors()) return "orderForm";
-        order.setUser(user);
 
-        orderRepository.save(order);
+        orderService.processOrder(order, user);
+
         sessionStatus.setComplete();
         return "redirect:/";
     }

@@ -6,12 +6,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.io.Serializable;
+
 
 @Data
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
-public class Ingredient {
+public class Ingredient implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private final String id;
     private final String name;
