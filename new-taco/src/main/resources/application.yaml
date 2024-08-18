@@ -37,6 +37,14 @@ logging:
       springframework:
         security: info
 
+#Email
+tacocloud:
+  email:
+    host: imap.gmail.com
+    mailbox: INBOX
+    username: ttttilinn85@gmail.com
+    password: werpipl15
+    poll-rate: 10000
 
 
 

@@ -27,7 +27,7 @@ public class OrderApiController {
 
     @GetMapping("/allOrder")
     public List<TacoOrderDTO> getOrders() {
-        return receiver.receiverListOrder();
+        return receiver.receiveOrderList();
     }
 
 }

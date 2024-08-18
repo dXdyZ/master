@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.another.newtaco.entity.TacoOrder;
 import org.another.newtaco.entity.User;
 import org.another.newtaco.entity.dto.TacoOrderDTO;
+import org.another.newtaco.integration_file.FileWriterGateway;
 import org.another.newtaco.repository.OrderRepository;
 import org.another.newtaco.service.OrderMessagingService;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ import java.util.stream.Collectors;
 public class OrderService {
     private OrderRepository orderRepository;
     private OrderMessagingService messagingService;
+    private FileWriterGateway fileWriter;
 
     public OrderService(OrderRepository orderRepository,
-                           OrderMessagingService messagingService) {
+                       OrderMessagingService messagingService,
+                        FileWriterGateway fileWriter) {
         this.orderRepository = orderRepository;
         this.messagingService = messagingService;
+        this.fileWriter = fileWriter;
     }
 
     public void processOrder(TacoOrder order, User user) {
@@ -30,8 +34,9 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        messagingService.sendOrder(mapOrderInDTO(order));
+        //messagingService.sendOrder(mapOrderInDTO(order));
 
+        fileWriter.writeToFile("test", order.toString());
 
         log.info("orderList size: {}", mapTacoOrderInOrderDTO().size());
     }

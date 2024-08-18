@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @RestResource(rel = "tacos", path = "tacos")
+@RequiredArgsConstructor
 public class Taco implements Serializable {
     private static final long serialVersionUID = 1L;
 
