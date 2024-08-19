@@ -1,0 +1,21 @@
+spring:
+  application:
+  name: mail-taco-order
+  main:
+    web-application-type: none
+tacocloud:
+  email:
+    host: imap.yandex.ru
+    mailbox: INBOX
+    username: AnotherSc
+    password: cufzeqevxzjpwozi
+    poll-rate: 10000
+server:
+  port: 9090
+
+logging:
+  level:
+    root: info
+tacourl:
+  api:
+    url: http://localhost:8080/orderMail

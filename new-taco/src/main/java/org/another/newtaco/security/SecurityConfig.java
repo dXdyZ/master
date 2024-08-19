@@ -35,15 +35,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrg -> csrg
-                        .ignoringRequestMatchers("/api/**"))
+                        .ignoringRequestMatchers("/API/**", "/orderMail"))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .authorizeHttpRequests((authorization) -> authorization
                         .requestMatchers("/design", "/orders/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/ordersApi/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/orderMail").anonymous()
                         .requestMatchers(HttpMethod.GET, "/receive-order").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ordersApi").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ingredients/**").hasAuthority("SCOPE_getIngredients")
-                        .requestMatchers(HttpMethod.POST, "/api/ingredients/**").hasAuthority("SCOPE_writeIngredients")
+                        .requestMatchers(HttpMethod.POST, "/API/ingredients").anonymous()
+                        //.requestMatchers(HttpMethod.POST, "/api/ingredients/**").hasAuthority("SCOPE_writeIngredients")
                         .requestMatchers(HttpMethod.DELETE, "/api/ingredients/**").hasAuthority("SCOPE_deleteIngredients")
                         .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAuthority("SCOPE_getOrders")
                         .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAuthority("SCOPE_writeOrders")
@@ -51,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/register").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/image/**").permitAll()//включение стилей
                 )
-                    .httpBasic(Customizer.withDefaults())
+                    //.httpBasic(Customizer.withDefaults())
                     .formLogin(Customizer.withDefaults())
                 .build();
 

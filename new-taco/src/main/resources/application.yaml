@@ -38,13 +38,13 @@ logging:
         security: info
 
 #Email
-tacocloud:
-  email:
-    host: imap.gmail.com
-    mailbox: INBOX
-    username: ttttilinn85@gmail.com
-    password: werpipl15
-    poll-rate: 10000
+#tacocloud:
+#  email:
+#    host: imap.gmail.com
+#    mailbox: INBOX
+#    username: wqeqweqweqweqw
+#    password: qeqweqweqw
+#    poll-rate: 10000
 
 
 
