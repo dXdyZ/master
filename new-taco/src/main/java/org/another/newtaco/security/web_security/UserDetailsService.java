@@ -1,4 +1,4 @@
-package org.another.newtaco.security;
+package org.another.newtaco.security.web_security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

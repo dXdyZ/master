@@ -14,8 +14,10 @@ server:
   port: 9090
 
 logging:
+  file:
+    name: Mail.log
   level:
-    root: info
+    root: debug
 tacourl:
   api:
     url: http://localhost:8080/orderMail

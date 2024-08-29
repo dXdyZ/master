@@ -1,4 +1,4 @@
-package org.another.newtaco.security;
+package org.another.newtaco.security.web_security;
 
 import org.another.newtaco.entity.User;
 import org.another.newtaco.repository.UserRepository;
@@ -35,11 +35,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrg -> csrg
-                        .ignoringRequestMatchers("/API/**", "/orderMail"))
+                        .ignoringRequestMatchers("/API/**", "/orderMail", "/reactor/**", "/hello"))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .authorizeHttpRequests((authorization) -> authorization
                         .requestMatchers("/design", "/orders/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/ordersApi/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reactor/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hello/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/reactor/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/orderMail").anonymous()
                         .requestMatchers(HttpMethod.GET, "/receive-order").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ordersApi").permitAll()
@@ -58,5 +61,6 @@ public class SecurityConfig {
                 .build();
 
     }
+
 
 }
