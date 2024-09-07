@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: book-manager
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/book_manager
+    username: root
+    password: werpipl15
+  jpa:
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
+        jdbc: debug
+      hibernate:
+        jpa: debug
+        sql: debug
+    root: info
+  file:
+    name: DEBUG.log
+
+bookmanager:
+  email:
+    host: smtp.yandex.com
+    username: AnotherSc@yandex.ru
+    port: 465
+    password: cufzeqevxzjpwozi

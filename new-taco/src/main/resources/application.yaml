@@ -5,7 +5,6 @@ spring:
     port: 5672
     username: root
     password: werpipl15
-
   data:
     rest:
       base-path: /api
@@ -23,8 +22,18 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9000/oauth2/jwks
+  boot:
+    admin:
+      client:
+        url: http://localhost:9090
 server:
   port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, loggers, env, beans, httptrace, mapping, threaddump
 
 
 logging:
