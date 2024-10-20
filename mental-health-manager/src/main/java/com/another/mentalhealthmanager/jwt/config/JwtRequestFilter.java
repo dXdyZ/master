@@ -1,14 +1,14 @@
-package com.example.jwtserver.configs;
+package com.another.mentalhealthmanager.jwt.config;
 
-import com.example.jwtserver.utilit.JWTTokensUtil;
+import com.another.mentalhealthmanager.jwt.utilit.JWTTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,17 +18,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-/**
- * Через фильтр проходит запрос и мы можем с ним что то делать
- * Фильтр включается только кода пользователь стучиться
- * в защищенную область
- * Так же перекладывает данные из токена в контекст
- */
-@Component
-@RequiredArgsConstructor
 @Slf4j
+@Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    private final JWTTokensUtil jwtTokensUtil;
+    private final JWTTokenUtils jwtTokenUtils;
+
+    @Autowired
+    public JwtRequestFilter(JWTTokenUtils jwtTokenUtils) {
+        this.jwtTokenUtils = jwtTokenUtils;
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -44,10 +43,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authHeader.substring(7);
             //Получаем пользователя
             try {
-                username = jwtTokensUtil.getUsername(jwt);
-            } catch (ExpiredJwtException e) { //Вышло время жизни токена
-                log.debug("Время жизни токена вышла");
-            } catch (SignatureException ex) { //Неверная подпись
+                username = jwtTokenUtils.getUsername(jwt);
+            } catch (ExpiredJwtException e) {
+                log.debug("Время жизни токена вышло");
+            } catch (SignatureException e) {
                 log.debug("Подпись неправильная");
             }
         }
@@ -56,13 +55,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    jwtTokensUtil.getRoles(jwt).stream().map(
-                            SimpleGrantedAuthority::new
-                    ).collect(Collectors.toList())
+                    jwtTokenUtils.getRoles(jwt).stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }
-        //Прогоняем цепочку фильтроф
         filterChain.doFilter(request, response);
     }
 }

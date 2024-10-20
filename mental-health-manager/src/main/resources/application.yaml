@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: mental-health-manager
+  datasource:
+    url: jdbc:mysql://localhost:3306/mental_health_manager
+    username: root
+    password: werpipl15
+  jpa:
+    hibernate:
+      ddl-auto: update
+#Включение пакетной обработки
+    properties:
+      hibernate:
+        hibernate:
+          jdbc:
+            batch_size: 5
+
+jwt:
+  secret: h13g41312u556k45b654n43532m234kdk2
+  lifetime: 1h
+
+logging:
+  level:
+    root: info

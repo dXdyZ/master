@@ -33,7 +33,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+
     private final UserRepository userRepository;
     private final BookAndUserService booksAndService;
     private final PasswordEncoder passwordEncoder;
