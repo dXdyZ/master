@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: test-consul
+  config:
+    import: 'consul:'
+  cloud:
+    consul:
+      port: 8500
+      host: localhost
+      discovery:
+        enabled: true
+      config:
+        format: yaml
+        data-key: data
+        fail-fast: true
+        enabled: true
+        watch:
+          enabled: true
+logging:
+  level:
+    org.springframework: debug
+

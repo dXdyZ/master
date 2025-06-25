@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: kafka-test
+  kafka:
+    producer:
+      # Адреса брокеров Kafka для первоначального подключения
+      bootstrap-servers: localhost:9092
+
+      # Сериализатор для ключа сообщения (String формат)
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+      # Сериализатор для тела сообщения (JSON формат)
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+      # Максимальное количество повторных попыток отправки при ошибках
+      retries: 10
+
+      # Уровень подтверждения записи: all - ждем подтверждения от всех реплик
+      acks: all
+
+      properties:
+        # Настройки повторных попыток:
+        # delivery.timeout.ms >= linger.ms + request.timeout.ms
+        retry:
+          backoff:
+            # Пауза (в миллисекундах) между повторными попытками
+            ms: 1000
+
+        # Максимальное время доставки сообщения (включая повторы)
+        delivery:
+          timeout:
+            ms: 60000  # Превышение вызовет TimeoutException
+
+        # Время ожидания накопления сообщений в батче перед отправкой
+        linger:
+          ms: 0  # 0 = отправка сразу, без задержки
+
+        # Таймаут ожидания ответа от брокера
+        request:
+          timeout:
+            ms: 30000  # 30 секунд
+
+        # Включение идемпотентности (гарантия однократной доставки)
+        enable:
+          idempotence: true  # Требует acks=all

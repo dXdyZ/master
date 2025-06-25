@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: kafka-consumer
+  kafka:
+    consumer:
+      # Адреса брокеров Kafka для первоначального подключения
+      bootstrap-servers: localhost:9092
+
+      # Десериализатор для ключа сообщения (String формат)
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+      # Десериализатор для тела сообщения с обработкой ошибок
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+
+      # Уникальное id группы потребителей (обязательно)
+
+      group-id: product-created-event
+
+      properties:
+        # Указываем основной десериализатор для ErrorHandlingDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+
+        # Указываем класс, в который нужно десериализовать JSON
+        spring.json.value.default.type: com.your.package.ProductCreatedEvent
+
+        # Доверенные пакеты (нельзя оставлять просто "*" в YAML)
+        spring.json.trusted.packages: "*"
+
+        # Дополнительные рекомендуемые настройки:
+        spring.json.use.type.headers: false  # Если не используете заголовки типа
